@@ -1,9 +1,9 @@
 import numpy as np
 import json
-from google import Google
+from .google import Google
 import time
 class Data():
-    def __init__(self, path='../data/Food-2010-7010.json', location_path='../data/location.json'):
+    def __init__(self, path='../data/Food-2010-7010.json' , location_path='../data/location.json'):
         self.path = path
         self.location_path = location_path
         with open(self.path, 'r') as f:
