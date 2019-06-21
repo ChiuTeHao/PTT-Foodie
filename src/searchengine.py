@@ -6,7 +6,7 @@ class SearchEngine:
     def __init__(self):
         self.k1=1
         self.b=0.75
-        self.datapath=os.path.join(os.path.join(os.getcwd(),os.pardir),'data')
+        self.datapath=os.path.normpath(os.path.join(os.path.dirname(_file_),'../data'))
         self.doccnt,self.doclendic,self.avgdoclen=self.getDocLen()
         with open(os.path.join(self.datapath,'inverted_file.json'),'r') as f:
             self.worddic=json.load(f)
@@ -20,7 +20,7 @@ class SearchEngine:
         word=[]
         '''for i in range(len(query)-1):
             word.append(query[i]+query[i+1])'''
-        words=jieba.cut(query,cut_all=False)
+        words=list(jieba.cut(query,cut_all=False))
         word=list(words)
         '''for result in words:
             if len(result)>2:
@@ -64,6 +64,7 @@ class SearchEngine:
         for result in results:
             idx=self.docidxtable[result[0]]
             print(self.doclist[idx]['article_title'])
+            print(result[0])
             if printStar==True:
                 print(self.doclist[idx]['stars'])
     def BM25(self,queryword):
@@ -95,7 +96,7 @@ class SearchEngine:
         results=self.BM25(queryword)
         mainlocsim=[]
         minilocsim=[]
-        newresults=[]
+        results2=[]
         for result in results:
             idx=self.docidxtable[result[0]]
             ranklist.append(self.doclist[idx])
@@ -115,9 +116,13 @@ class SearchEngine:
                 starscore=self.doclist[idx]['stars']
             else:
                 starscore=0
-            newresults.append((result[0],result[1]+locscore+starscore/5,starscore))
-        newresults=sorted(newresults,key=lambda x:x[1],reverse=True)
-        self.printResult(results)
-        print('==============================================')
-        self.printResult(newresults[:10])
-        return newresults[:10]
+            results2.append((result[0],result[1]+locscore+starscore/5,starscore))
+        results2=sorted(results2,key=lambda x:x[1],reverse=True)[:10]
+        #self.printResult(results)
+        #print('==============================================')
+        #self.printResult(results2[:10])
+        result3=[]
+        for result in results2:
+            idx=self.docidxtable[result[0]]
+            result3.append(self.doclist[idx])
+        return result3
