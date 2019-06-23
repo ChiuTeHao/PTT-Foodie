@@ -90,7 +90,7 @@ class SearchEngine:
                         scores[docname]+=idf*tf
         tmpresults=sorted(scores.items(),key=lambda x:x[1],reverse=True)
         maxscore=tmpresults[0][1]
-        last=min(40,len(tmpresults))
+        last=min(40,len(tmpresults)-1)
         base=tmpresults[last][1]
         results=[]
         for tmpresult in tmpresults:
